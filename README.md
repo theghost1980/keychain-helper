@@ -103,6 +103,31 @@ KeychainHelper.requestLogin(
 );
 ```
 
+---
+
+## 📊 Comparativa frente a otros paquetes
+
+<small>
+
+| Paquete                 | Uso en Frontend               | Instalación Sencilla | Depende de librerías grandes     | Sólo utiliza Hive Keychain Extension         | Peso ligero | Facilidad de uso |
+| ----------------------- | ----------------------------- | -------------------- | -------------------------------- | -------------------------------------------- | ----------- | ---------------- |
+| `keychain-helper`       | ✅ Sí                         | ✅ Sí                | 🚫 No                            | ✅ Sí                                        | ✅ Sí       | ✅ Muy Alta      |
+| `hive-keychain-helpers` | ✅ Sí                         | ⚠️ Parcial           | 🚫 No                            | ✅ Sí                                        | ✅ Sí       | ✅ Alta          |
+| `keychain-sdk`          | ⚠️ (Más pensado para Node.js) | 🚫 Complejo          | ⚠️ Sí (dhive, crypto, etc.)      | 🚫 No (puede usar Keychain y firmas locales) | 🚫 No       | ⚠️ Media         |
+| `dhive`                 | 🚫 No                         | 🚫 No                | ✅ Sí (requiere librerías extra) | 🚫 No                                        | 🚫 No       | ⚠️ Media         |
+
+</small>
+
+---
+
+✅ **Notas**:
+
+- **keychain-helper** está diseñado **exclusivamente para el navegador** y para trabajar **directamente con Hive Keychain**, sin instalaciones innecesarias.
+- Otros paquetes como `keychain-sdk` o `dhive` son potentes pero cargan dependencias pesadas no necesarias para simples operaciones de Keychain.
+- Esto hace que `keychain-helper` sea **ideal para frontends rápidos, seguros y ligeros**.
+
+---
+
 ## ❗ Requisitos
 
 - Tener instalada la extensión Hive Keychain.
