@@ -1,108 +1,121 @@
-### KeychainHelper
+# 🔑 Keychain Helper
 
-Diseñado para contar con un lenguaje tipado, usando [Typescript](https://www.typescriptlang.org/) como una "superposición" de las peticiones que se llevan a cabo usando [Hive Keychain](https://hive-keychain.com/),
+Simplifica la interacción con Hive Keychain en aplicaciones web modernas.
 
-### Por qué crear esto si ya existe un [KeychainSDK](https://www.npmjs.com/package/keychain-sdk)?
-
-Debido a que KeychainSDK permite un ambiente fluido en ciertos marcos de trabajo como: nodejs y algunas versiones de webpack, pero si intentamos hacer que nuestro Frontend interactúe directamente con la Keychain, para hacer uso del SDK tendriamos que instalar cosas que en mi opinión son innecesarias de tener del lado del cliente. Hablo específicamente de librerías como cripto, buffer, etc.
-
-> Todo esto es debido a que el KeychainSDK utiliza funciones y utilidades de la biblioteca @hiveio/dhive a traves de su paquete hive-keychain-commons
-
-Es por eso que me tomé la libertad de codificar un paquete que funciona como un ayudante específico para:
-
-- Usar hacer que tu frontend moderno pueda interactuar con la Hive Keychain sin necesidad de dependencias.
-- Hacer uso del poder del tipado para tener acceso a variables, tipos de variables y ayudas que son vitales, sobre todo cuando empiezas en HIVE.
-- Contar con todos los tipos de peticiones, o al menos irlo agregando ya que esto es un proyecto en desarrollo.
-- Tener un ayudante para impartir de tipos clases de formación de Hive en Venezuela, ya que actualmente la documentación se hacee dificil de comprender facilmente.
-
-### Ejemplo de como ayuda este paquete
-
-Supongamos que estas empezando a programar en web3 y especificamente en HIVE. Tu primera tarea es interactuar con la Hive Keychain utilizando Javascript. Entonces desde la documentacion oficial obtienes este codigo:
-
-```
-const keychain = window.hive_keychain;
-keychain.requestVerifyKey('stoodkev', encodedMessage, 'Posting', (response) => {
-  if (response.success === true) {
-    const decodedMessage = response.result;
-  }
-});
-```
-
-Al momento de correr el codigo, por alguna razon que aun no conoces, la Hive Keychain no es detectada en tu codigo de react.
-
-> Un detalle que aprendi, al trabajar incansablemente es que como la parte del codigo que llama a los eventos para la interaccion entre el sitio web y la Keychain, es un codigo injectado, esa injeccion **puede tardar hasta 120 milisengudos**
-
-### Soluciones de web3 para un desarrollo mas fluido
-
-Entonces al codificar esta utilidad, se hace la llamada al comando de peticion para la Keychain pero antes de hacerlo:
-
-1. Se garantiza al menos intentar detectarla
-2. Se muestran los tipos de datos de entrada, asi como otros detalles importantes, como ejemplos y demas.
+Keychain Helper proporciona una API sencilla y segura para interactuar con las funcionalidades principales de Hive Keychain, permitiendo realizar firmas de operaciones, logins seguros y más, con una integración rápida y orientada a desarrolladores web3.
 
 ---
 
-#### Documentación
+## 🚀 Instalación
 
-- Oficial para hive keychain. [Clic aquí](https://github.com/hive-keychain/hive-keychain-extension/blob/master/documentation/README.md)
+Instala el paquete mediante npm:
 
-#### Configuraciones de este proyecto
-
-Decidí no utilizar dependencias ya que considero importante que un ayudante como este, debe sumar en vez de restar y por ende, no debe sino depender de lo escencial.
-
-#### Carpeta .vscode
-
-Normalmente se usa para configurar tu espacio de trabajo para el editor de codigo [VSCode](https://code.visualstudio.com/). He decidio incluirla ya que nos ayudará si estamos utilizando el mismo editor.
-
-> Nota: Si estás utilizando otro editor de código simplemente borrala.
-
-```
-{
-    "editor.defaultFormatter": "esbenp.prettier-vscode",     // Configura Prettier como el formateador por defecto.
-    "editor.formatOnSave": true,                             // Habilita el formato automático del archivo al guardar.
-    "editor.codeActionsOnSave": {                            // Configura acciones de código para ejecutar al guardar.
-      "source.fixAll": "explicit",                           // Intenta aplicar todas las correcciones automáticas ("fix all") al guardar.
-      "source.organizeImports": "explicit"                   // Organiza (ordena/limpia) las importaciones al guardar.
-    },
-    // Prefiere rutas de importación no relativas en TypeScript cuando sea posible.
-    "typescript.preferences.importModuleSpecifier": "non-relative",
-}
+```bash
+npm install keychain-helper
 ```
 
-#### Tsconfig explicado
+> Nota: Este helper requiere que el usuario final tenga instalada la extensión [Hive Keychain](https://hive-keychain.com/) en su navegador.
 
-A continuación te explico cada detalle de configuración para que se entienda, e incluso a futuro, pueda ser mejorado o adaptado según las necesidades.
+## ✨ Características
+
+- Firma de transacciones en Hive de manera simple.
+- Login seguro usando Keychain (útil para sistemas con JWT).
+- Firma y decodificación de mensajes.
+- Gestión de Custom JSON, transferencias, propuestas DHF y más.
+- API amigable para TypeScript y JavaScript.
+- Ideal para proyectos de Web3 frontend.
+
+---
+
+## 📦 Uso Rápido
 
 ```
-{
-    "compilerOptions": {
-      "target": "es2015", // Compila a JavaScript antiguo para mayor compatibilidad
-      "module": "esnext", // Usa módulos ESM (import/export)
-      "declaration": true, // Genera archivos .d.ts (definiciones de tipos)
-      "outDir": "./dist", // Directorio de salida para los archivos compilados
-      "rootDir": "./src", // Directorio raíz de los archivos fuente
-      "strict": true, // Habilita opciones estrictas de TypeScript
-      "esModuleInterop": true, // Permite importar módulos CommonJS como si fueran ESM
-      "skipLibCheck": true, // Omite la verificación de tipos de librerías externas (útil a veces)
-      "forceConsistentCasingInFileNames": true // Asegura consistencia en nombres de archivos
-    },
-    "include": [
-      "src/**/*" // Incluye todos los archivos .ts dentro de src
-    ],
-    "exclude": [
-      "node_modules", // Excluye node_modules
-      "dist" // Excluye el directorio de salida
-    ]
+import { KeychainHelper } from "keychain-helper";
+
+KeychainHelper.requestVote(
+  "your_username", // Tu cuenta Hive
+  "author",        // Autor del post
+  "permlink",      // Permlink del post
+  10000,           // Porcentaje de voto (10000 = 100%)
+  (response) => {
+    if (response.success) {
+      console.log("✅ Voto realizado!");
+    } else {
+      console.error("❌ Error al votar:", response.message);
+    }
   }
+);
 ```
 
-#### Nota sobre requestHandshake:
+## 📋 Métodos Disponibles
 
-Hive Keychain ofrece una función requestHandshake para verificar la conexión entre la página web y la extensión.
-Sin embargo:
+Método | Descripción
+requestLogin | Realiza un login seguro usando Keychain como agente de validar una firma.
+requestVote | Permite votar un post o comentario en Hive.
+requestBroadcast | Firma y transmite operaciones directamente.
+requestCustomJson | Firma y envía Custom JSONs a la blockchain.
+requestTransfer | Realiza transferencias de HIVE o HBD.
+requestDecodeMessage | Decodifica mensajes encriptados.
+requestEncodeMessage | Encripta mensajes para otros usuarios.
+requestCreateProposal | Crea propuestas para el DHF (Decentralized Hive Fund).
 
-- Su uso era el de detectar la keychain. Pero ahora contamos con una funcion de login request haciendo el proceso mas organizado y ya probado como óptimo y seguro.
-- Actualmente a pesar de haber probado con https, ngrok, no pude hacerla funcionar.
-- Para mayor información contacta directamente al equipo de [Hive Keychain](https://hive-keychain.com/).
+> Proyecto en desarrollo, mas metodos por agregar...
 
-Por esta razón, este helper no incluye handshake automático.
-Si necesitas verificar conexión, puedes hacer un try-catch manual sobre cualquier otra operación de Keychain.
+---
+
+## 🛠️ Ejemplos de Uso
+
+### 🔐 Login usando Keychain
+
+```
+import { KeychainHelper } from "keychain-helper";
+
+KeychainHelper.requestLogin(
+  "your_username",
+  "custom_challenge_nonce",
+  (response) => {
+    if (response.success) {
+      console.log("Login exitoso:", response.result);
+    } else {
+      console.error("Error en login:", response.message);
+    }
+  }
+);
+```
+
+## ❗ Requisitos
+
+- Tener instalada la extensión Hive Keychain en el navegador.
+
+- Proyecto basado en frameworks modernos de frontend (React, Vue, Svelte, etc.) o aplicaciones web tradicionales.
+
+- Conexiones HTTPS en ambientes de producción para garantizar la compatibilidad de Keychain, recomendado pero hasta el momento la hive keychain se puede usar en ambientes de desarrollo local. `ej: http://localhost`
+
+## 🔧 Opciones Avanzadas
+
+Keychain Helper está diseñado para integrarse fácilmente en sistemas backend que implementen autenticación avanzada (por ejemplo, utilizando JWT).
+
+Esto permite construir soluciones Web3 seguras y totalmente descentralizadas basadas en Hive.
+
+> Tip: Combina requestLogin con tu backend para validar identidades mediante la firma de retos personalizados.
+
+## 🤝 Contribuciones
+
+- ¡Toda contribución es bienvenida!
+- Si deseas mejorar este proyecto, puedes:
+  - Abrir un Issue con sugerencias o reportes de bugs.
+  - Enviar un Pull Request con mejoras o nuevas funciones.
+- Ayudar a mejorar la documentación.
+
+> Antes de contribuir, revisa las buenas prácticas en CONTRIBUTING.md (próximamente).
+
+## 📜 Licencia
+
+Este proyecto está bajo la licencia MIT.
+Consulta el archivo LICENSE para más detalles.
+
+## 📣 Créditos
+
+Inspirado en el ecosistema Hive y en la necesidad de herramientas simples y robustas para Web3.
+
+Desarrollado con ❤️ por [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://peakd.com/@theghost1980)
