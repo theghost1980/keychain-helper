@@ -105,26 +105,39 @@ KeychainHelper.requestLogin(
 
 ---
 
-## 📊 Comparativa frente a otros paquetes
-
-<small>
-
-| Paquete                 | Uso en Frontend               | Instalación Sencilla | Depende de librerías grandes     | Sólo utiliza Hive Keychain Extension         | Peso ligero | Facilidad de uso |
-| ----------------------- | ----------------------------- | -------------------- | -------------------------------- | -------------------------------------------- | ----------- | ---------------- |
-| `keychain-helper`       | ✅ Sí                         | ✅ Sí                | 🚫 No                            | ✅ Sí                                        | ✅ Sí       | ✅ Muy Alta      |
-| `hive-keychain-helpers` | ✅ Sí                         | ⚠️ Parcial           | 🚫 No                            | ✅ Sí                                        | ✅ Sí       | ✅ Alta          |
-| `keychain-sdk`          | ⚠️ (Más pensado para Node.js) | 🚫 Complejo          | ⚠️ Sí (dhive, crypto, etc.)      | 🚫 No (puede usar Keychain y firmas locales) | 🚫 No       | ⚠️ Media         |
-| `dhive`                 | 🚫 No                         | 🚫 No                | ✅ Sí (requiere librerías extra) | 🚫 No                                        | 🚫 No       | ⚠️ Media         |
-
-</small>
-
----
-
 ✅ **Notas**:
 
 - **keychain-helper** está diseñado **exclusivamente para el navegador** y para trabajar **directamente con Hive Keychain**, sin instalaciones innecesarias.
 - Otros paquetes como `keychain-sdk` o `dhive` son potentes pero cargan dependencias pesadas no necesarias para simples operaciones de Keychain.
-- Esto hace que `keychain-helper` sea **ideal para frontends rápidos, seguros y ligeros**.
+- Esto hace que `keychain-helper` sea **ideal para frontends rápidos, seguros y ligeros** para interactuar con Hive Blockchain usando Hive Keychain.
+
+---
+
+---
+
+## 🛠️ Entornos de prueba recomendados
+
+Este paquete ha sido probado exitosamente en los siguientes entornos:
+
+| Entorno        | Versión            |
+| -------------- | ------------------ |
+| **React**      | `18.x.x`           |
+| **Webpack**    | `5.x.x`            |
+| **TypeScript** | `5.x.x` (opcional) |
+
+✅ También es compatible con cualquier frontend basado en **JavaScript moderno** (ES6+).
+
+> **Nota**: Aunque el helper está construido con soporte TypeScript, su uso es igual de sencillo en proyectos JavaScript tradicionales.
+
+---
+
+## 🚀 Insignias para destacar
+
+```markdown
+![Lightweight](https://img.shields.io/badge/lightweight-yes-brightgreen)
+![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
+![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
+![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
 
 ---
 
@@ -163,3 +176,4 @@ Desarrollado con ❤️ por @theghost1980
 
 ¿Tienes ideas o quieres colaborar?
 Contactame: [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://peakd.com/@theghost1980)
+```
