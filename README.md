@@ -113,8 +113,6 @@ KeychainHelper.requestLogin(
 
 ---
 
----
-
 ## 🛠️ Entornos de prueba recomendados
 
 Este paquete ha sido probado exitosamente en los siguientes entornos:
@@ -138,6 +136,7 @@ Este paquete ha sido probado exitosamente en los siguientes entornos:
 ![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
 ![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
 ![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
+```
 
 ---
 
@@ -176,4 +175,7 @@ Desarrollado con ❤️ por @theghost1980
 
 ¿Tienes ideas o quieres colaborar?
 Contactame: [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://peakd.com/@theghost1980)
+
+```
+
 ```
