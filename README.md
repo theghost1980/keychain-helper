@@ -1,5 +1,10 @@
 # 🔑 Keychain Helper
 
+![Lightweight](https://img.shields.io/badge/lightweight-yes-brightgreen)
+![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
+![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
+![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
+
 > Facilita la interacción con Hive Keychain en aplicaciones Web3 modernas.
 
 Keychain Helper proporciona una API sencilla y segura para interactuar con las funcionalidades principales de Hive Keychain, permitiendo realizar firmas de operaciones, logins seguros y más, con una integración rápida y orientada a desarrolladores web3.
@@ -126,15 +131,6 @@ Este paquete ha sido probado exitosamente en los siguientes entornos:
 ✅ También es compatible con cualquier frontend basado en **JavaScript moderno** (ES6+).
 
 > **Nota**: Aunque el helper está construido con soporte TypeScript, su uso es igual de sencillo en proyectos JavaScript tradicionales.
-
----
-
-## 🚀 Insignias para destacar
-
-![Lightweight](https://img.shields.io/badge/lightweight-yes-brightgreen)
-![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
-![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
-![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
 
 ---
 
