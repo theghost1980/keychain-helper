@@ -172,4 +172,5 @@ Contactame: [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://
 
 ```
 
+> Mas informacion importante [Ver Propósitos, INFO](./INFO.md)
 ```
