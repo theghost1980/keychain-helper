@@ -49,15 +49,16 @@ KeychainHelper.requestVote(
 
 ## 📋 Métodos Disponibles
 
-Método | Descripción
-requestLogin | Realiza un login seguro usando Keychain como agente de validar una firma.
-requestVote | Permite votar un post o comentario en Hive.
-requestBroadcast | Firma y transmite operaciones directamente.
-requestCustomJson | Firma y envía Custom JSONs a la blockchain.
-requestTransfer | Realiza transferencias de HIVE o HBD.
-requestDecodeMessage | Decodifica mensajes encriptados.
-requestEncodeMessage | Encripta mensajes para otros usuarios.
-requestCreateProposal | Crea propuestas para el DHF (Decentralized Hive Fund).
+| Método                | Descripción                                                               |
+| --------------------- | ------------------------------------------------------------------------- |
+| requestLogin          | Realiza un login seguro usando Keychain como agente de validar una firma. |
+| requestVote           | Permite votar un post o comentario en Hive.                               |
+| requestBroadcast      | Firma y transmite operaciones directamente.                               |
+| requestCustomJson     | Firma y envía Custom JSONs a la blockchain.                               |
+| requestTransfer       | Realiza transferencias de HIVE o HBD.                                     |
+| requestDecodeMessage  | Decodifica mensajes encriptados.                                          |
+| requestEncodeMessage  | Encripta mensajes para otros usuarios.                                    |
+| requestCreateProposal | Crea propuestas para el DHF (Decentralized Hive Fund).                    |
 
 > Proyecto en desarrollo, mas metodos por agregar...
 
