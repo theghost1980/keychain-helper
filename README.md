@@ -170,7 +170,4 @@ Desarrollado con ❤️ por @theghost1980
 ¿Tienes ideas o quieres colaborar?
 Contactame: [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://peakd.com/@theghost1980)
 
-```
-
 > Mas informacion importante [Ver Propósitos, INFO](./INFO.md)
-```
