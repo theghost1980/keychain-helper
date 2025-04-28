@@ -131,12 +131,10 @@ Este paquete ha sido probado exitosamente en los siguientes entornos:
 
 ## 🚀 Insignias para destacar
 
-```markdown
 ![Lightweight](https://img.shields.io/badge/lightweight-yes-brightgreen)
 ![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
 ![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
 ![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
-```
 
 ---
 
