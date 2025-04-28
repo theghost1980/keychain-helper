@@ -1,0 +1,38 @@
+{
+  "name": "keychain-helper",
+  "version": "1.0.0",
+  "description": "A lightweight utility library for interacting with Hive Keychain browser extension.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "hive",
+    "keychain",
+    "blockchain",
+    "utility",
+    "browser-extension",
+    "typescript"
+  ],
+  "author": "Saturno Mangieri @theghost1980",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tu_usuario/nombre_repo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu_usuario/nombre_repo/issues"
+  },
+  "homepage": "https://github.com/tu_usuario/nombre_repo#readme"
+}
