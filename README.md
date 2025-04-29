@@ -11,6 +11,14 @@ Keychain Helper proporciona una API sencilla y segura para interactuar con las f
 
 ---
 
+## 🔗 Demo en vivo
+
+Si quieres probar la libreria/wrapper sin necesidad de instalar e incluso ver el código, accesa a
+
+> 👉 [https://keychain-helper-playground.netlify.app](https://keychain-helper-playground.netlify.app)
+
+---
+
 ## 🚀 Introducción
 
 Keychain Helper es una librería simple, segura y amigable para TypeScript y JavaScript, que te permite interactuar de forma sencilla con Hive Keychain.
