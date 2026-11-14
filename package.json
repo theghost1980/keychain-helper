@@ -1,38 +1,69 @@
 {
   "name": "keychain-helper",
-  "version": "1.0.0",
-  "description": "A lightweight utility library for interacting with Hive Keychain browser extension.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "2.0.0",
+  "description": "Wrapper TypeScript sin dependencias para la extensión Hive Keychain: detección robusta, API con callbacks y con promesas, respuestas tipadas.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsc",
-    "prepare": "npm run build",
-    "dev": "tsc --watch"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "size": "node scripts/size.mjs",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build && npm run test:smoke"
   },
   "keywords": [
     "hive",
+    "hive-keychain",
     "keychain",
     "blockchain",
-    "utility",
+    "web3",
     "browser-extension",
-    "typescript"
+    "typescript",
+    "zero-dependency"
   ],
   "author": "Saturno Mangieri @theghost1980",
   "license": "MIT",
-  "devDependencies": {
-    "typescript": "^5.0.0"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tu_usuario/nombre_repo.git"
+    "url": "git+https://github.com/theghost1980/keychain-helper.git"
   },
   "bugs": {
-    "url": "https://github.com/tu_usuario/nombre_repo/issues"
+    "url": "https://github.com/theghost1980/keychain-helper/issues"
   },
-  "homepage": "https://github.com/tu_usuario/nombre_repo#readme"
+  "homepage": "https://github.com/theghost1980/keychain-helper#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "happy-dom": "21.0.4",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vite": "7.3.8",
+    "vitest": "5.0.5"
+  }
 }

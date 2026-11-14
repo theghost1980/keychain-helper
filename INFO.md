@@ -32,22 +32,31 @@ Al momento de correr el codigo, por alguna razon que aun no conoces, la Hive Key
 
 > Un detalle que aprendi, al trabajar incansablemente es que como la parte del codigo que llama a los eventos para la interaccion entre el sitio web y la Keychain, es un codigo injectado, esa injeccion **puede tardar hasta 120 milisengudos**
 
+> **Actualización v2 (noviembre de 2026):** los 120 ms no son un límite. En 2026 otros equipos (Ecency, Mantequilla-Soft) documentaron inyecciones más lentas y apps que deslogueaban al usuario por comprobar demasiado pronto. Por eso la v2 ya no espera un tiempo fijo y comprueba una vez: **busca la extensión cada 50 ms durante hasta 1 segundo** y sigue en cuanto la encuentra. Si ya está inyectada, no espera nada.
+
 ### Soluciones de web3 para un desarrollo mas fluido
 
 Entonces al codificar esta utilidad, se hace la llamada al comando de peticion para la Keychain pero antes de hacerlo:
 
-1. Se garantiza al menos intentar detectarla
-2. Se muestran los tipos de datos de entrada, asi como otros detalles importantes, como ejemplos y demas.
+1. Se espera a que la extensión esté inyectada (sondeo con tiempo máximo configurable, ver `waitForKeychain`).
+2. Se comprueba que la extensión instalada tiene el método pedido (las versiones antiguas no tienen, por ejemplo, `requestSavingsOperation`).
+3. Se muestran los tipos de datos de entrada **y de la respuesta**, así como ejemplos y otros detalles importantes.
+4. Se ofrece la misma petición con callback o con promesa (`KeychainHelperAsync`).
 
 ---
 
 #### Documentación
 
-- Oficial para hive keychain. [Clic aquí](https://github.com/hive-keychain/hive-keychain-extension/blob/master/documentation/README.md)
+- Fuente de verdad de la API: el archivo [`public/hive_keychain.js`](https://github.com/hive-keychain/hive-keychain-extension/blob/master/public/hive_keychain.js) de la extensión. Es lo que se inyecta en la página como `window.hive_keychain`.
+- La validación de cada petición está en [`src/content-scripts/hive/web-interface/input-validation.ts`](https://github.com/hive-keychain/hive-keychain-extension/blob/master/src/content-scripts/hive/web-interface/input-validation.ts). Ahí se ve, por ejemplo, que `requestBroadcast` no acepta la clave `Memo`.
+- La [documentación oficial](https://github.com/hive-keychain/hive-keychain-extension/blob/master/documentation/README.md) está desactualizada: su último cambio es de mayo de 2024, y la extensión añadió después `pair_id` y `requestSavingsOperation`.
+- Para detectar cambios en la API: `node scripts/check-extension-signatures.mjs` compara las firmas publicadas con `test/fixtures/extension-signatures.json`.
 
 #### Configuraciones de este proyecto
 
 Decidí no utilizar dependencias ya que considero importante que un ayudante como este, debe sumar en vez de restar y por ende, no debe sino depender de lo escencial.
+
+> Esto sigue igual en la v2: **cero dependencias en tiempo de ejecución**. Las herramientas de build y pruebas (`tsup`, `vitest`, `happy-dom`, `vite`, `typescript`) son solo `devDependencies` y no se instalan en el proyecto de quien usa el paquete.
 
 #### Carpeta .vscode
 
@@ -68,41 +77,25 @@ Normalmente se usa para configurar tu espacio de trabajo para el editor de codig
 }
 ```
 
-#### Tsconfig explicado
 
-A continuación te explico cada detalle de configuración para que se entienda, e incluso a futuro, pueda ser mejorado o adaptado según las necesidades.
+#### Build y tsconfig
 
-```
-{
-    "compilerOptions": {
-      "target": "es2015", // Compila a JavaScript antiguo para mayor compatibilidad
-      "module": "esnext", // Usa módulos ESM (import/export)
-      "declaration": true, // Genera archivos .d.ts (definiciones de tipos)
-      "outDir": "./dist", // Directorio de salida para los archivos compilados
-      "rootDir": "./src", // Directorio raíz de los archivos fuente
-      "strict": true, // Habilita opciones estrictas de TypeScript
-      "esModuleInterop": true, // Permite importar módulos CommonJS como si fueran ESM
-      "skipLibCheck": true, // Omite la verificación de tipos de librerías externas (útil a veces)
-      "forceConsistentCasingInFileNames": true // Asegura consistencia en nombres de archivos
-    },
-    "include": [
-      "src/**/*" // Incluye todos los archivos .ts dentro de src
-    ],
-    "exclude": [
-      "node_modules", // Excluye node_modules
-      "dist" // Excluye el directorio de salida
-    ]
-  }
-```
+Desde la v2 el paquete se compila con [tsup](https://tsup.egoist.dev/) (`tsup.config.ts`) en lugar de `tsc` directamente:
 
-#### Nota sobre requestHandshake:
+- Genera `dist/index.js` (ESM) y `dist/index.cjs` (CommonJS), cada uno con su archivo de tipos (`index.d.ts` y `index.d.cts`).
+- El campo `exports` de `package.json` indica a Node y a los bundlers qué archivo usar en cada caso. Antes, `main` apuntaba a un archivo ESM y `require("keychain-helper")` fallaba.
+- `sideEffects: false` permite a los bundlers eliminar lo que no uses.
+- Los tipos incluyen la ampliación global `window.hive_keychain`. En la v1 vivía en un `.d.ts` que `tsc` no copiaba a `dist`, así que no llegaba a quien instalaba el paquete.
+- Se compila a ES2015 para máxima compatibilidad.
 
-Hive Keychain ofrece una función requestHandshake para verificar la conexión entre la página web y la extensión.
-Sin embargo:
+`tsconfig.json` ya no compila: solo comprueba tipos del código (`npm run typecheck`), sin tipos de Node, para garantizar que la librería no depende de Node. `tsconfig.test.json` añade los tests y los tipos de Node.
 
-- Su uso era el de detectar la keychain. Pero ahora contamos con una funcion de login request haciendo el proceso mas organizado y ya probado como óptimo y seguro.
-- Actualmente a pesar de haber probado con https, ngrok, no pude hacerla funcionar.
-- Para mayor información contacta directamente al equipo de [Hive Keychain](https://hive-keychain.com/).
+#### Nota sobre requestHandshake
 
-Por esta razón, este helper no incluye handshake automático.
-Si necesitas verificar conexión, puedes hacer un try-catch manual sobre cualquier otra operación de Keychain.
+Hive Keychain ofrece `requestHandshake(callback)`. En la v1 no se incluyó porque no logré hacerlo funcionar. Revisando el código de la extensión (noviembre de 2026) quedó claro por qué:
+
+- **El callback se llama sin argumentos.** No hay objeto `response` con `success`, así que un código que espera `response.success` nunca ve un éxito.
+- **Solo guarda un callback a la vez** (`handshake_callback`): dos llamadas seguidas pisan la primera.
+- **Lo responde el content script de la página, no el service worker de la extensión.** Por eso no sirve como "ping" para saber si la extensión está despierta. El problema documentado en 2026 es justo que el service worker (Manifest V3) se duerme y las firmas quedan colgadas, y el handshake respondería igual con el worker dormido.
+
+Por eso la v2 tampoco lo incluye. Para detectar la extensión usa `waitForKeychain`. Para no quedarte esperando una firma que nunca llega, usa `createKeychainClient({ requestTimeoutMs })`.
