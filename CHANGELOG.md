@@ -2,7 +2,7 @@
 
 Todos los cambios relevantes de este paquete. Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y versionado [SemVer](https://semver.org/lang/es/).
 
-## [2.0.1] - sin publicar
+## [2.0.1] - 2026-11-14
 
 Solo documentación; el código es idéntico a la 2.0.0.
 
