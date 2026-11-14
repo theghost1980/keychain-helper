@@ -2,6 +2,17 @@
 
 Todos los cambios relevantes de este paquete. Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y versionado [SemVer](https://semver.org/lang/es/).
 
+## [2.0.1] - sin publicar
+
+Solo documentación; el código es idéntico a la 2.0.0.
+
+### Cambiado
+
+- `README.md` pasa a estar en inglés (es el que muestra npm) y la versión en español se mueve a `README.es.md`. Ambos enlazan entre sí.
+- Se quitan los badges de shields.io, que no se mostraban en npm, y se sustituyen por una línea de texto con los datos clave.
+- Los enlaces a `INFO.md`, `CHANGELOG.md` y `docs/` usan URLs absolutas de GitHub, porque esos archivos no viajan en el paquete.
+- La descripción de `package.json` pasa a inglés.
+
 ## [2.0.0] - 2026-11-14
 
 Detalle completo, con la verificación de cada punto, en [docs/v2/hallazgos-y-cambios.md](./docs/v2/hallazgos-y-cambios.md). Cómo actualizar: [docs/v2/guia-de-migracion.md](./docs/v2/guia-de-migracion.md).

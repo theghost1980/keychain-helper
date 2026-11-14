@@ -1,7 +1,7 @@
 {
   "name": "keychain-helper",
-  "version": "2.0.0",
-  "description": "Wrapper TypeScript sin dependencias para la extensión Hive Keychain: detección robusta, API con callbacks y con promesas, respuestas tipadas.",
+  "version": "2.0.1",
+  "description": "Zero-dependency TypeScript wrapper for the Hive Keychain browser extension: robust detection, callback and promise APIs, typed responses.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
