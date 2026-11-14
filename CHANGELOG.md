@@ -2,7 +2,7 @@
 
 Todos los cambios relevantes de este paquete. Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y versionado [SemVer](https://semver.org/lang/es/).
 
-## [2.0.0] - sin publicar
+## [2.0.0] - 2026-11-14
 
 Detalle completo, con la verificación de cada punto, en [docs/v2/hallazgos-y-cambios.md](./docs/v2/hallazgos-y-cambios.md). Cómo actualizar: [docs/v2/guia-de-migracion.md](./docs/v2/guia-de-migracion.md).
 
