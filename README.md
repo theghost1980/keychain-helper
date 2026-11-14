@@ -1,93 +1,92 @@
 # 🔑 Keychain Helper
 
-![Lightweight](https://img.shields.io/badge/gzip-~2.2%20kB-brightgreen)
-![Frontend Friendly](https://img.shields.io/badge/frontend-friendly-blue)
-![No Dependencies](https://img.shields.io/badge/dependencies-none-green)
-![Hive Keychain](https://img.shields.io/badge/hive-keychain-red)
+**English** · [Español](https://github.com/theghost1980/keychain-helper/blob/main/README.es.md)
 
-> Facilita la interacción con Hive Keychain en aplicaciones Web3 modernas, sin dependencias.
+**0 dependencies · ~2.2 kB min+gzip · TypeScript · ESM + CommonJS · SSR-safe**
 
-Keychain Helper es una capa fina y tipada sobre `window.hive_keychain`, la API que inyecta la extensión [Hive Keychain](https://hive-keychain.com/). Resuelve los problemas típicos de integración:
+> Talk to Hive Keychain from modern Web3 apps, with no dependencies.
 
-- espera a que la extensión termine de inyectarse en lugar de fallar si tarda;
-- responde de forma predecible cuando la extensión no está;
-- ofrece la misma API con **callbacks** (compatible con la v1) y con **promesas**;
-- tipa las entradas **y las respuestas**;
-- se puede importar en SSR (Next.js, Nuxt, Node) sin romper.
+Keychain Helper is a thin, typed layer over `window.hive_keychain`, the API injected by the [Hive Keychain](https://hive-keychain.com/) browser extension. It handles the usual integration problems:
+
+- waits for the extension to finish injecting instead of failing when it is slow;
+- answers predictably when the extension is missing;
+- offers the same API with **callbacks** (v1-compatible) and with **promises**;
+- types both inputs **and responses**;
+- can be imported during SSR (Next.js, Nuxt, Node) without breaking.
 
 ---
 
-## 🔗 Demo en vivo
+## 🔗 Live demo
 
 > 👉 [https://keychain-helper-playground.netlify.app](https://keychain-helper-playground.netlify.app)
 
 ---
 
-## 📦 Instalación
+## 📦 Installation
 
 ```bash
 npm install keychain-helper
 ```
 
-Funciona con `import` (ESM) y con `require` (CommonJS), y trae sus tipos TypeScript. No instala ninguna otra dependencia ni necesita polyfills (`buffer`, `crypto`, etc.).
+It works with `import` (ESM) and `require` (CommonJS) and ships its own TypeScript types. It installs no other dependencies and needs no polyfills (`buffer`, `crypto`, etc.).
 
-> El usuario final necesita la extensión [Hive Keychain](https://hive-keychain.com/) en su navegador.
+> End users need the [Hive Keychain](https://hive-keychain.com/) extension in their browser.
 
 ---
 
-## ⚡ Uso rápido
+## ⚡ Quick start
 
-### Con promesas (recomendado)
+### With promises (recommended)
 
 ```ts
 import { KeychainHelperAsync, KeychainError } from "keychain-helper";
 
 try {
   const res = await KeychainHelperAsync.requestVote(
-    "tu_usuario", // cuenta que vota
-    "permlink-del-post", // permlink (va ANTES que el autor)
-    "autor", // autor del post
-    10000 // peso: 10000 = 100 %
+    "your_username", // voting account
+    "post-permlink", // permlink (comes BEFORE the author)
+    "author", // post author
+    10000 // weight: 10000 = 100%
   );
-  console.log("✅ Voto emitido. tx:", res.result?.tx_id);
+  console.log("✅ Vote broadcast. tx:", res.result?.tx_id);
 } catch (e) {
   if (e instanceof KeychainError) {
-    if (e.code === "not_installed") console.warn("Instala Hive Keychain");
-    else console.error("❌ No se pudo votar:", e.message);
+    if (e.code === "not_installed") console.warn("Please install Hive Keychain");
+    else console.error("❌ Vote failed:", e.message);
   }
 }
 ```
 
-Cada promesa:
+Each promise:
 
-- **se resuelve** con la respuesta de Keychain cuando `success` es `true`;
-- **se rechaza** con un `KeychainError` en cualquier otro caso. `error.code` indica el motivo:
+- **resolves** with Keychain's response when `success` is `true`;
+- **rejects** with a `KeychainError` otherwise. `error.code` tells you why:
 
-| `code`                 | Significado                                                                 |
-| ---------------------- | --------------------------------------------------------------------------- |
-| `not_installed`        | No se detectó la extensión (o no hay `window`, por ejemplo en SSR).         |
-| `method_not_supported` | La extensión instalada es antigua y no tiene ese método.                    |
-| `dispatch_failed`      | La llamada a la extensión lanzó una excepción.                              |
-| `timeout`              | Venció `requestTimeoutMs` (solo si lo activaste).                           |
-| `keychain_error`       | Keychain respondió `success: false` (usuario canceló, error del nodo, etc.). |
+| `code`                 | Meaning                                                                  |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `not_installed`        | The extension was not detected (or there is no `window`, e.g. in SSR).   |
+| `method_not_supported` | The installed extension is too old and lacks that method.                |
+| `dispatch_failed`      | Calling the extension threw an exception.                                |
+| `timeout`              | `requestTimeoutMs` expired (only if you enabled it).                     |
+| `keychain_error`       | Keychain answered `success: false` (user cancelled, node error, etc.).   |
 
-`error.response` contiene la respuesta completa y `error.method` el método llamado.
+`error.response` holds the full response and `error.method` the method that was called.
 
-### Con callbacks (API de la v1)
+### With callbacks (v1 API)
 
 ```ts
 import { KeychainHelper } from "keychain-helper";
 
-KeychainHelper.requestVote("tu_usuario", "permlink-del-post", "autor", 10000, (response) => {
+KeychainHelper.requestVote("your_username", "post-permlink", "author", 10000, (response) => {
   if (response.success) {
-    console.log("✅ Voto realizado!", response.result?.tx_id);
+    console.log("✅ Voted!", response.result?.tx_id);
   } else {
-    console.error("❌ Error al votar:", response.message);
+    console.error("❌ Vote failed:", response.message);
   }
 });
 ```
 
-Si la extensión no está, el callback recibe:
+If the extension is missing, the callback receives:
 
 ```js
 { success: false, error: "not_installed", result: null, message: "Hive Keychain is not installed.", id: "vote" }
@@ -95,194 +94,194 @@ Si la extensión no está, el callback recibe:
 
 ---
 
-## 🔍 Detección de la extensión
+## 🔍 Extension detection
 
-La extensión inyecta `window.hive_keychain` con un retraso variable, y a veces tarda más de lo esperado. Antes de cada petición, keychain-helper **espera hasta 1 segundo** comprobando cada 50 ms, y continúa **en cuanto la detecta**. Si ya está presente, no espera nada.
+The extension injects `window.hive_keychain` after a variable delay, sometimes longer than expected. Before each request, keychain-helper **waits up to 1 second**, checking every 50 ms, and continues **as soon as it finds it**. If it is already there, there is no wait at all.
 
-También puedes comprobarlo tú:
+You can also check it yourself:
 
 ```ts
 import { waitForKeychain, getKeychain } from "keychain-helper";
 
-const instalada = await waitForKeychain({ timeoutMs: 2000, intervalMs: 100 }); // true | false, nunca rechaza
-const keychain = getKeychain(); // window.hive_keychain o undefined, sin esperar
+const installed = await waitForKeychain({ timeoutMs: 2000, intervalMs: 100 }); // true | false, never rejects
+const keychain = getKeychain(); // window.hive_keychain or undefined, no waiting
 ```
 
-La función de la v1 sigue disponible con la misma firma:
+The v1 function is still available with the same signature:
 
 ```ts
-KeychainHelperUtils.isKeychainInstalled(window, (instalada) => { /* ... */ }, 500);
+KeychainHelperUtils.isKeychainInstalled(window, (installed) => { /* ... */ }, 500);
 ```
 
-> ℹ️ Desde la v2 responde en cuanto detecta la extensión, en lugar de esperar siempre `delayMs`.
+> ℹ️ Since v2 it answers as soon as it detects the extension, instead of always waiting `delayMs`.
 
-### Cliente con opciones propias
+### Client with its own options
 
 ```ts
 import { createKeychainClient } from "keychain-helper";
 
 const keychain = createKeychainClient({
   detection: { timeoutMs: 3000, intervalMs: 100 },
-  requestTimeoutMs: 120_000, // desactivado por defecto
+  requestTimeoutMs: 120_000, // off by default
 });
 
-await keychain.requestTransfer("yo", "tu", "1.000", "Gracias", "HIVE");
+await keychain.requestTransfer("me", "you", "1.000", "Thanks", "HIVE");
 ```
 
-**Sobre `requestTimeoutMs`.** Está desactivado por defecto porque el usuario puede tardar lo que quiera en aprobar el popup. Actívalo si necesitas recuperarte de un caso conocido: el service worker de la extensión (Manifest V3) puede dormirse y dejar la petición sin respuesta. Usa valores generosos. Al vencer, la promesa se rechaza con `code: "timeout"`, pero el popup de Keychain puede seguir abierto.
+**About `requestTimeoutMs`.** It is off by default because users can take as long as they want to approve the popup. Turn it on if you need to recover from a known case: the extension's service worker (Manifest V3) can go to sleep and leave a request unanswered. Use generous values. When it expires, the promise rejects with `code: "timeout"`, but the Keychain popup may still be open.
 
 ---
 
-## 📋 Métodos disponibles
+## 📋 Available methods
 
-Todos existen en `KeychainHelper` (callbacks) y en `KeychainHelperAsync` / `createKeychainClient()` (promesas).
+Every method exists in `KeychainHelper` (callbacks) and in `KeychainHelperAsync` / `createKeychainClient()` (promises).
 
-En la versión con promesas se quita el callback: los parámetros opcionales que en la extensión van detrás del callback (`rpc`, `enforce`, `title`, `pair_id`, etc.) pasan a ocupar su lugar.
+The promise version drops the callback: the optional parameters that come after the callback in the extension (`rpc`, `enforce`, `title`, `pair_id`, etc.) move into its place.
 
 <small>
 
-| Método                          | Qué hace                                                                    | Parámetros (sin callback)                                                                      |
-| ------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `requestLogin`                  | Login: firma un challenge con la clave Posting.                             | `username, challenge, title?`                                                                  |
-| `requestSignBuffer`             | Firma un mensaje arbitrario.                                                | `account \| null, message, key, rpc?, title?`                                                  |
-| `requestEncodeMessage`          | Cifra un mensaje (debe empezar por `#`) para otra cuenta.                   | `username, receiver, message, key`                                                             |
-| `requestEncodeWithKeys`         | Cifra un mensaje para varias claves públicas.                               | `username, publicKeys, message, key`                                                           |
-| `requestVerifyKey`              | Descifra un mensaje `#...`; demuestra que el usuario controla la clave.     | `account, message, key`                                                                        |
-| `requestVote`                   | Vota un post o comentario.                                                  | `account, permlink, author, weight, rpc?`                                                      |
-| `requestPost`                   | Publica un post o comentario.                                               | `account, title, body, parent_perm, parent_account, json_metadata, permlink, comment_options, rpc?` |
-| `requestCustomJson`             | Emite un `custom_json`.                                                     | `account \| null, id, key, json, display_msg, rpc?`                                            |
-| `requestBroadcast`              | Emite operaciones arbitrarias.                                              | `account, operations, key, rpc?`                                                               |
-| `requestSignTx`                 | Firma una transacción sin emitirla.                                         | `account, tx, key, rpc?`                                                                       |
-| `requestTransfer`               | Transfiere HIVE o HBD.                                                      | `account, to, amount, memo, currency, enforce?, rpc?`                                          |
-| `requestSavingsOperation`       | Deposita en ahorros o retira de ahorros. **Nuevo en v2.**                   | `username, to, amount, currency, "deposit" \| "withdraw", memo, rpc?`                          |
-| `requestRecurrentTransfer`      | Transferencia recurrente.                                                   | `username \| null, to, amount, currency, memo, recurrence, executions, rpc?, pair_id?`         |
-| `requestSendToken`              | Transfiere un token de Hive Engine.                                         | `account, to, amount, memo, currency, rpc?`                                                    |
-| `requestDelegation`             | Delega HP (o la retira con `"0.000"`).                                      | `username \| null, delegatee, amount, "HP" \| "VESTS", rpc?`                                   |
-| `requestPowerUp`                | HIVE → HP.                                                                  | `username, recipient, hive, rpc?`                                                              |
-| `requestPowerDown`              | Inicia o cancela un power down.                                             | `username, hive_power, rpc?`                                                                   |
-| `requestConversion`             | Convierte HBD ↔ HIVE.                                                       | `username, amount, collaterized, rpc?`                                                         |
-| `requestSwap`                   | Intercambio con Keychain Swaps.                                             | `username \| null, startToken, endToken, amount, slippage, steps, rpc?, partnerUsername?, partnerFee?` |
-| `requestWitnessVote`            | Vota o retira el voto a un testigo.                                         | `username \| null, witness, vote, rpc?`                                                        |
-| `requestProxy`                  | Fija o quita (`""`) un proxy de gobernanza.                                 | `username \| null, proxy, rpc?`                                                                |
-| `requestCreateProposal`         | Crea una propuesta del DHF.                                                 | `username, receiver, subject, permlink, daily_pay, start, end, extensions, rpc?`               |
-| `requestRemoveProposal`         | Elimina propuestas del DHF.                                                 | `username, proposal_ids, extensions, rpc?`                                                     |
-| `requestUpdateProposalVote`     | Apoya o retira el apoyo a propuestas.                                       | `username, proposal_ids, approve, extensions, rpc?`                                            |
-| `requestAddAccountAuthority`    | Concede autoridad de cuenta (multifirma).                                   | `account, authorizedUsername, role, weight, rpc?`                                              |
-| `requestRemoveAccountAuthority` | Retira una autoridad de cuenta.                                             | `account, authorizedUsername, role, rpc?`                                                      |
-| `requestAddKeyAuthority`        | Añade una clave pública como autoridad.                                     | `account, authorizedKey, role, weight, rpc?`                                                   |
-| `requestRemoveKeyAuthority`     | Retira una clave pública de las autoridades.                                | `account, authorizedKey, role, rpc?`                                                           |
-| `requestCreateClaimedAccount`   | Crea una cuenta con un token reclamado.                                     | `username, new_account, owner, active, posting, memo, rpc?`                                    |
-| `requestAddAccount`             | Añade una cuenta a Keychain con sus claves.                                 | `username, keys`                                                                               |
+| Method                          | What it does                                                         | Parameters (without callback)                                                                  |
+| ------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `requestLogin`                  | Login: signs a challenge with the Posting key.                       | `username, challenge, title?`                                                                  |
+| `requestSignBuffer`             | Signs an arbitrary message.                                          | `account \| null, message, key, rpc?, title?`                                                  |
+| `requestEncodeMessage`          | Encrypts a message (must start with `#`) for another account.        | `username, receiver, message, key`                                                             |
+| `requestEncodeWithKeys`         | Encrypts a message for several public keys.                          | `username, publicKeys, message, key`                                                           |
+| `requestVerifyKey`              | Decrypts a `#...` message; proves the user controls the key.         | `account, message, key`                                                                        |
+| `requestVote`                   | Votes on a post or comment.                                          | `account, permlink, author, weight, rpc?`                                                      |
+| `requestPost`                   | Publishes a post or comment.                                         | `account, title, body, parent_perm, parent_account, json_metadata, permlink, comment_options, rpc?` |
+| `requestCustomJson`             | Broadcasts a `custom_json`.                                          | `account \| null, id, key, json, display_msg, rpc?`                                            |
+| `requestBroadcast`              | Broadcasts arbitrary operations.                                     | `account, operations, key, rpc?`                                                               |
+| `requestSignTx`                 | Signs a transaction without broadcasting it.                         | `account, tx, key, rpc?`                                                                       |
+| `requestTransfer`               | Transfers HIVE or HBD.                                               | `account, to, amount, memo, currency, enforce?, rpc?`                                          |
+| `requestSavingsOperation`       | Deposits to or withdraws from savings. **New in v2.**                | `username, to, amount, currency, "deposit" \| "withdraw", memo, rpc?`                          |
+| `requestRecurrentTransfer`      | Recurrent transfer.                                                  | `username \| null, to, amount, currency, memo, recurrence, executions, rpc?, pair_id?`         |
+| `requestSendToken`              | Transfers a Hive Engine token.                                       | `account, to, amount, memo, currency, rpc?`                                                    |
+| `requestDelegation`             | Delegates HP (or removes it with `"0.000"`).                         | `username \| null, delegatee, amount, "HP" \| "VESTS", rpc?`                                   |
+| `requestPowerUp`                | HIVE → HP.                                                           | `username, recipient, hive, rpc?`                                                              |
+| `requestPowerDown`              | Starts or cancels a power down.                                      | `username, hive_power, rpc?`                                                                   |
+| `requestConversion`             | Converts HBD ↔ HIVE.                                                 | `username, amount, collaterized, rpc?`                                                         |
+| `requestSwap`                   | Swap through Keychain Swaps.                                         | `username \| null, startToken, endToken, amount, slippage, steps, rpc?, partnerUsername?, partnerFee?` |
+| `requestWitnessVote`            | Votes or unvotes a witness.                                          | `username \| null, witness, vote, rpc?`                                                        |
+| `requestProxy`                  | Sets or removes (`""`) a governance proxy.                           | `username \| null, proxy, rpc?`                                                                |
+| `requestCreateProposal`         | Creates a DHF proposal.                                              | `username, receiver, subject, permlink, daily_pay, start, end, extensions, rpc?`               |
+| `requestRemoveProposal`         | Removes DHF proposals.                                               | `username, proposal_ids, extensions, rpc?`                                                     |
+| `requestUpdateProposalVote`     | Supports or unsupports proposals.                                    | `username, proposal_ids, approve, extensions, rpc?`                                            |
+| `requestAddAccountAuthority`    | Grants account authority (multisig).                                 | `account, authorizedUsername, role, weight, rpc?`                                              |
+| `requestRemoveAccountAuthority` | Removes an account authority.                                        | `account, authorizedUsername, role, rpc?`                                                      |
+| `requestAddKeyAuthority`        | Adds a public key as an authority.                                   | `account, authorizedKey, role, weight, rpc?`                                                   |
+| `requestRemoveKeyAuthority`     | Removes a public key from the authorities.                           | `account, authorizedKey, role, rpc?`                                                           |
+| `requestCreateClaimedAccount`   | Creates an account with a claimed token.                             | `username, new_account, owner, active, posting, memo, rpc?`                                    |
+| `requestAddAccount`             | Adds an account to Keychain with its keys.                           | `username, keys`                                                                               |
 
 </small>
 
-**Formatos que exige la extensión:**
+**Formats the extension requires:**
 
-- Cantidades de HIVE, HBD y HP como **cadena con 3 decimales** (`"1.000"`), y VESTS con 6.
-- `daily_pay` con el formato `"10.000 HBD"`.
-- Fechas con el formato `"2026-12-01T00:00:00"`.
-- `json`, `json_metadata`, `comment_options`, `proposal_ids` y `extensions` como **JSON serializado** (`JSON.stringify`).
+- HIVE, HBD and HP amounts as a **string with 3 decimals** (`"1.000"`), and VESTS with 6.
+- `daily_pay` as `"10.000 HBD"`.
+- Dates as `"2026-12-01T00:00:00"`.
+- `json`, `json_metadata`, `comment_options`, `proposal_ids` and `extensions` as **serialized JSON** (`JSON.stringify`).
 
-**Claves:**
+**Keys:**
 
-- `key` acepta `"Posting"`, `"Active"` o `"Memo"` en las peticiones de mensajes.
-- En `requestBroadcast`, `requestSignTx` y `requestCustomJson`, y en el `role` de las autoridades, solo se acepta `"Posting"` o `"Active"`: la extensión rechaza `"Memo"`.
+- `key` accepts `"Posting"`, `"Active"` or `"Memo"` for message requests.
+- In `requestBroadcast`, `requestSignTx` and `requestCustomJson`, and in the `role` of the authority requests, only `"Posting"` or `"Active"` are accepted: the extension rejects `"Memo"`.
 
-**No incluidos:**
+**Not included:**
 
-- `requestSignedCall`: la extensión lo marca como deprecado y ya no hace nada (nunca responde).
-- `requestHandshake`: solo confirma que la página tiene el content script, no que la extensión esté despierta. Ver [INFO.md](./INFO.md).
+- `requestSignedCall`: the extension marks it as deprecated and it no longer does anything (it never answers).
+- `requestHandshake`: it only confirms that the page has the content script, not that the extension is awake. See [INFO.md](https://github.com/theghost1980/keychain-helper/blob/main/INFO.md) (Spanish).
 
-Utilidades extra en `KeychainHelperUtils`:
+Extra utilities in `KeychainHelperUtils`:
 
-- `generateRandomString(length, includeTimestamp)`: útil para permlinks.
-- `isKeychainInstalled`, `waitForKeychain` y `getKeychain`.
+- `generateRandomString(length, includeTimestamp)`: handy for permlinks.
+- `isKeychainInstalled`, `waitForKeychain` and `getKeychain`.
 
 ---
 
-## 🛠️ Ejemplos
+## 🛠️ Examples
 
 ### 🔐 Login
 
 ```ts
 import { KeychainHelperAsync } from "keychain-helper";
 
-// 1. Tu servidor genera un challenge único y lo envía al cliente.
+// 1. Your server generates a unique challenge and sends it to the client.
 const challenge = await fetch("/api/challenge").then((r) => r.text());
 
-// 2. El usuario lo firma con su clave Posting.
-const res = await KeychainHelperAsync.requestLogin("tu_usuario", challenge, "Entrar en Mi App");
+// 2. The user signs it with their Posting key.
+const res = await KeychainHelperAsync.requestLogin("your_username", challenge, "Sign in to My App");
 
-// 3. Tu servidor verifica la firma (res.result) contra la clave pública Posting de la cuenta.
+// 3. Your server verifies the signature (res.result) against the account's Posting public key.
 await fetch("/api/login", {
   method: "POST",
-  body: JSON.stringify({ username: "tu_usuario", signature: res.result, publicKey: res.publicKey }),
+  body: JSON.stringify({ username: "your_username", signature: res.result, publicKey: res.publicKey }),
 });
 ```
 
-> ⚠️ Firmar en el cliente no autentica a nadie por sí solo: la verificación tiene que ocurrir en tu servidor.
+> ⚠️ Signing on the client does not authenticate anyone by itself: verification must happen on your server.
 
-### 💬 Comentar un post
+### 💬 Comment on a post
 
 ```ts
 import { KeychainHelperAsync, KeychainHelperUtils } from "keychain-helper";
 
-const autorPadre = "theghost1980";
-const permlinkPadre = "mi-post";
-const permlink = `re-${autorPadre}-${KeychainHelperUtils.generateRandomString(6, true)}`;
+const parentAuthor = "theghost1980";
+const parentPermlink = "my-post";
+const permlink = `re-${parentAuthor}-${KeychainHelperUtils.generateRandomString(6, true)}`;
 
 await KeychainHelperAsync.requestPost(
-  "tu_usuario",
-  "", // los comentarios no llevan título
-  "¡Excelente post!",
-  permlinkPadre,
-  autorPadre,
-  JSON.stringify({ tags: ["hive"], app: "mi-app/1.0", format: "markdown" }),
+  "your_username",
+  "", // comments have no title
+  "Great post!",
+  parentPermlink,
+  parentAuthor,
+  JSON.stringify({ tags: ["hive"], app: "my-app/1.0", format: "markdown" }),
   permlink,
-  null // sin comment_options
+  null // no comment_options
 );
 ```
 
-### 💸 Transferencia con memo cifrado
+### 💸 Transfer with an encrypted memo
 
 ```ts
-// Si el memo empieza por "#", Keychain lo cifra con la clave Memo.
-await KeychainHelperAsync.requestTransfer("yo", "tu", "1.500", "#mensaje privado", "HBD");
+// If the memo starts with "#", Keychain encrypts it with the Memo key.
+await KeychainHelperAsync.requestTransfer("me", "you", "1.500", "#private message", "HBD");
 ```
 
-### 🏦 Ahorros
+### 🏦 Savings
 
 ```ts
-await KeychainHelperAsync.requestSavingsOperation("yo", "yo", "10.000", "HBD", "deposit");
+await KeychainHelperAsync.requestSavingsOperation("me", "me", "10.000", "HBD", "deposit");
 ```
 
 ### 🧩 Custom JSON
 
 ```ts
 await KeychainHelperAsync.requestCustomJson(
-  null, // el usuario elige la cuenta
+  null, // the user picks the account
   "follow",
   "Posting",
-  JSON.stringify(["follow", { follower: "yo", following: "theghost1980", what: ["blog"] }]),
-  "Seguir a @theghost1980"
+  JSON.stringify(["follow", { follower: "me", following: "theghost1980", what: ["blog"] }]),
+  "Follow @theghost1980"
 );
 ```
 
 ---
 
-## 🧪 Entornos
+## 🧪 Environments
 
-- **Navegadores de escritorio** con la extensión Hive Keychain (Chromium y Firefox). El navegador integrado de la app móvil de Keychain no se ha probado con este paquete.
-- **Bundlers:** Vite, Webpack, Next.js, etc. El paquete declara `exports` para ESM y CommonJS y `sideEffects: false`.
-- **SSR / Node:** importar el paquete es seguro. Las peticiones responden `not_installed` porque no hay `window`.
-- **TypeScript:** tipos incluidos, incluida la ampliación de `window.hive_keychain`.
-- Compilado a ES2015.
+- **Desktop browsers** with the Hive Keychain extension (Chromium and Firefox). The in-app browser of the Keychain mobile app has not been tested with this package.
+- **Bundlers:** Vite, Webpack, Next.js, etc. The package declares `exports` for ESM and CommonJS and `sideEffects: false`.
+- **SSR / Node:** importing the package is safe. Requests answer `not_installed` because there is no `window`.
+- **TypeScript:** types included, including the `window.hive_keychain` augmentation.
+- Compiled to ES2015.
 
-> Se recomienda HTTPS en producción. Keychain funciona en `http://localhost` durante el desarrollo.
+> HTTPS is recommended in production. Keychain works on `http://localhost` during development.
 
 ---
 
-## 🧑‍💻 Desarrollo
+## 🧑‍💻 Development
 
 ```bash
 npm install
@@ -312,30 +311,30 @@ npm run size
 node scripts/check-extension-signatures.mjs
 ```
 
-- `npm test`: pruebas con Vitest y un `window.hive_keychain` simulado.
-- `npm run test:smoke`: empaqueta, instala el `.tgz` en un directorio temporal y lo prueba con Node, TypeScript y Vite.
-- `npm run size`: tamaño minificado y comprimido con gzip.
-- `check-extension-signatures.mjs`: compara las firmas con la extensión publicada en GitHub.
+- `npm test`: Vitest tests with a mocked `window.hive_keychain`.
+- `npm run test:smoke`: packs the package, installs the `.tgz` in a temporary directory and tests it with Node, TypeScript and Vite.
+- `npm run size`: minified and gzipped size.
+- `check-extension-signatures.mjs`: compares the method signatures with the extension published on GitHub.
 
 ---
 
-## 🤝 Contribuciones
+## 🤝 Contributing
 
-¡Contribuciones, mejoras y sugerencias son bienvenidas! Abre un issue o envía un pull request.
+Contributions, improvements and suggestions are welcome! Open an issue or send a pull request.
 
-## 📜 Licencia
+## 📜 License
 
 MIT.
 
-## 📣 Créditos
+## 📣 Credits
 
-Inspirado en el ecosistema Hive y en la necesidad de herramientas simples y robustas para Web3.
+Inspired by the Hive ecosystem and the need for simple, robust Web3 tools.
 
-Desarrollado con ❤️ por @theghost1980
+Made with ❤️ by @theghost1980
 
-## 📫 Contacto
+## 📫 Contact
 
-¿Tienes ideas o quieres colaborar?
-Contáctame: [@theghost1980](https://github.com/theghost1980/) / [Peakd](https://peakd.com/@theghost1980)
+Have ideas or want to collaborate?
+Reach me at [@theghost1980](https://github.com/theghost1980/) / [PeakD](https://peakd.com/@theghost1980)
 
-> Más información: [propósito del proyecto y notas técnicas (INFO.md)](./INFO.md) · [Cambios (CHANGELOG.md)](./CHANGELOG.md) · [Migrar desde la v1](./docs/v2/guia-de-migracion.md)
+> More: [project purpose and technical notes (INFO.md, Spanish)](https://github.com/theghost1980/keychain-helper/blob/main/INFO.md) · [Changelog](https://github.com/theghost1980/keychain-helper/blob/main/CHANGELOG.md) · [Migrating from v1 (Spanish)](https://github.com/theghost1980/keychain-helper/blob/main/docs/v2/guia-de-migracion.md)
