@@ -1,0 +1,254 @@
+{
+  "source": "https://github.com/hive-keychain/hive-keychain-extension/blob/6bb7da68/public/hive_keychain.js",
+  "commit": "6bb7da68 (2026-02-03, feature(savings))",
+  "signatures": {
+    "requestHandshake": [
+      "callback"
+    ],
+    "requestEncodeMessage": [
+      "username",
+      "receiver",
+      "message",
+      "key",
+      "callback"
+    ],
+    "requestEncodeWithKeys": [
+      "username",
+      "publicKeys",
+      "message",
+      "key",
+      "callback"
+    ],
+    "requestVerifyKey": [
+      "account",
+      "message",
+      "key",
+      "callback"
+    ],
+    "requestSignBuffer": [
+      "account",
+      "message",
+      "key",
+      "callback",
+      "rpc",
+      "title"
+    ],
+    "requestAddAccountAuthority": [
+      "account",
+      "authorizedUsername",
+      "role",
+      "weight",
+      "callback",
+      "rpc"
+    ],
+    "requestRemoveAccountAuthority": [
+      "account",
+      "authorizedUsername",
+      "role",
+      "callback",
+      "rpc"
+    ],
+    "requestAddKeyAuthority": [
+      "account",
+      "authorizedKey",
+      "role",
+      "weight",
+      "callback",
+      "rpc"
+    ],
+    "requestRemoveKeyAuthority": [
+      "account",
+      "authorizedKey",
+      "role",
+      "callback",
+      "rpc"
+    ],
+    "requestBroadcast": [
+      "account",
+      "operations",
+      "key",
+      "callback",
+      "rpc"
+    ],
+    "requestSignTx": [
+      "account",
+      "tx",
+      "key",
+      "callback",
+      "rpc"
+    ],
+    "requestSignedCall": [
+      "account",
+      "method",
+      "params",
+      "key",
+      "callback",
+      "rpc"
+    ],
+    "requestPost": [
+      "account",
+      "title",
+      "body",
+      "parent_perm",
+      "parent_account",
+      "json_metadata",
+      "permlink",
+      "comment_options",
+      "callback",
+      "rpc"
+    ],
+    "requestVote": [
+      "account",
+      "permlink",
+      "author",
+      "weight",
+      "callback",
+      "rpc"
+    ],
+    "requestCustomJson": [
+      "account",
+      "id",
+      "key",
+      "json",
+      "display_msg",
+      "callback",
+      "rpc"
+    ],
+    "requestTransfer": [
+      "account",
+      "to",
+      "amount",
+      "memo",
+      "currency",
+      "callback",
+      "enforce",
+      "rpc"
+    ],
+    "requestSavingsOperation": [
+      "username",
+      "to",
+      "amount",
+      "currency",
+      "operation",
+      "memo",
+      "callback",
+      "rpc"
+    ],
+    "requestSendToken": [
+      "account",
+      "to",
+      "amount",
+      "memo",
+      "currency",
+      "callback",
+      "rpc"
+    ],
+    "requestDelegation": [
+      "username",
+      "delegatee",
+      "amount",
+      "unit",
+      "callback",
+      "rpc"
+    ],
+    "requestWitnessVote": [
+      "username",
+      "witness",
+      "vote",
+      "callback",
+      "rpc"
+    ],
+    "requestProxy": [
+      "username",
+      "proxy",
+      "callback",
+      "rpc"
+    ],
+    "requestPowerUp": [
+      "username",
+      "recipient",
+      "hive",
+      "callback",
+      "rpc"
+    ],
+    "requestPowerDown": [
+      "username",
+      "hive_power",
+      "callback",
+      "rpc"
+    ],
+    "requestCreateClaimedAccount": [
+      "username",
+      "new_account",
+      "owner",
+      "active",
+      "posting",
+      "memo",
+      "callback",
+      "rpc"
+    ],
+    "requestCreateProposal": [
+      "username",
+      "receiver",
+      "subject",
+      "permlink",
+      "daily_pay",
+      "start",
+      "end",
+      "extensions",
+      "callback",
+      "rpc"
+    ],
+    "requestRemoveProposal": [
+      "username",
+      "proposal_ids",
+      "extensions",
+      "callback",
+      "rpc"
+    ],
+    "requestUpdateProposalVote": [
+      "username",
+      "proposal_ids",
+      "approve",
+      "extensions",
+      "callback",
+      "rpc"
+    ],
+    "requestAddAccount": [
+      "username",
+      "keys",
+      "callback"
+    ],
+    "requestConversion": [
+      "username",
+      "amount",
+      "collaterized",
+      "callback",
+      "rpc"
+    ],
+    "requestRecurrentTransfer": [
+      "username",
+      "to",
+      "amount",
+      "currency",
+      "memo",
+      "recurrence",
+      "executions",
+      "callback",
+      "rpc",
+      "pair_id"
+    ],
+    "requestSwap": [
+      "username",
+      "startToken",
+      "endToken",
+      "amount",
+      "slippage",
+      "steps",
+      "callback",
+      "rpc",
+      "partnerUsername",
+      "partnerFee"
+    ]
+  }
+}
